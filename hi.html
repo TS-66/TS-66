@@ -2,344 +2,216 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TS-66 // GLOBAL COMMAND [BETA]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TS-66 // BETA_PRIME</title>
     <style>
         :root {
-            --ts-red: #ff3131;
-            --ts-bg: #050505;
-            --ts-text: #ffffff;
-            --glass: rgba(15, 15, 15, 0.85);
-            --border: rgba(255, 49, 49, 0.4);
-            --glow: 0 0 25px rgba(255, 49, 49, 0.4);
+            --red: #ff3131;
+            --bg: #050505;
+            --glass: rgba(20, 0, 0, 0.8);
+            --border: rgba(255, 49, 49, 0.5);
+            --glow: 0 0 15px var(--red);
         }
 
-        * { box-sizing: border-box; cursor: crosshair; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            background-color: var(--ts-bg);
-            color: var(--ts-text);
-            font-family: 'Orbitron', 'Segoe UI', sans-serif;
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
         }
 
-        /* --- BETA TAG --- */
-        .beta-tag {
+        /* --- BETA WATERMARK --- */
+        .beta-overlay {
             position: fixed;
-            top: 20px;
-            right: -35px;
-            background: var(--ts-red);
-            color: black;
-            padding: 5px 40px;
-            font-weight: 900;
-            font-size: 0.8rem;
-            transform: rotate(45deg);
+            top: 10px; right: 10px;
+            color: var(--red);
+            font-weight: bold;
+            border: 1px solid var(--red);
+            padding: 5px 10px;
+            font-size: 0.7rem;
             z-index: 9999;
-            box-shadow: 0 0 15px var(--ts-red);
-            letter-spacing: 2px;
+            text-shadow: var(--glow);
             pointer-events: none;
+            animation: pulse 2s infinite;
         }
 
-        /* --- LOGIN SCREEN (GLASSMORPHISM) --- */
+        @keyframes pulse { 50% { opacity: 0.3; } }
+
+        /* --- LOGIN SCREEN --- */
         #login-screen {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'), radial-gradient(circle, #250000 0%, #050505 100%);
+            position: fixed; inset: 0;
+            display: flex; justify-content: center; align-items: center;
+            background: radial-gradient(circle, #250000 0%, #050505 100%);
             z-index: 1000;
-            transition: 1s cubic-bezier(0.85, 0, 0.15, 1);
+            transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s;
         }
 
         .login-card {
-            width: 480px;
-            padding: 60px;
+            width: 90%; max-width: 400px;
+            padding: 40px 20px;
             background: var(--glass);
             border: 1px solid var(--border);
-            border-radius: 2px;
-            backdrop-filter: blur(25px);
-            box-shadow: var(--glow);
+            backdrop-filter: blur(15px);
             text-align: center;
-            animation: float 4s ease-in-out infinite;
+            box-shadow: var(--glow);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .login-card h2 {
-            font-size: 1.5rem;
-            letter-spacing: 15px;
-            color: var(--ts-red);
-            margin-bottom: 50px;
-            text-shadow: 0 0 10px var(--ts-red);
-        }
-
-        .input-wrapper { position: relative; margin-bottom: 30px; }
+        .login-card h1 { font-size: 1.5rem; letter-spacing: 5px; color: var(--red); margin-bottom: 30px; }
 
         input {
-            width: 100%;
-            padding: 18px;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid #222;
-            color: white;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            font-size: 1.2rem;
-            outline: none;
-            transition: 0.4s;
+            width: 100%; padding: 15px; margin-bottom: 20px;
+            background: rgba(0,0,0,0.6); border: 1px solid #333;
+            color: var(--red); text-align: center; font-family: inherit;
+            outline: none; transition: 0.3s;
         }
 
-        input:focus {
-            border-color: var(--ts-red);
-            box-shadow: inset 0 0 10px rgba(255,0,0,0.2);
+        input:focus { border-color: var(--red); box-shadow: 0 0 10px rgba(255,0,0,0.3); }
+
+        .btn {
+            width: 100%; padding: 15px; background: var(--red);
+            color: black; border: none; font-weight: bold;
+            letter-spacing: 3px; cursor: pointer; transition: 0.3s;
         }
 
-        .btn-auth {
-            width: 100%;
-            padding: 20px;
-            background: transparent;
-            border: 1px solid var(--ts-red);
-            color: var(--ts-red);
-            font-weight: bold;
-            letter-spacing: 5px;
-            transition: 0.4s;
-            text-transform: uppercase;
-        }
+        .btn:active { transform: scale(0.95); background: #fff; }
 
-        .btn-auth:hover {
-            background: var(--ts-red);
-            color: black;
-            box-shadow: 0 0 30px var(--ts-red);
-        }
-
-        /* --- MAIN DASHBOARD (MAX COOLER) --- */
+        /* --- MAIN GUI (MOBILE FRIENDLY) --- */
         #main-site {
-            display: none;
-            width: 100vw;
-            height: 100vh;
-            display: none;
-            grid-template-columns: 320px 1fr 350px;
-            grid-template-rows: 70px 1fr 30px;
-            background: #080808;
-            animation: openTerminal 0.6s ease-out;
-        }
-
-        @keyframes openTerminal {
-            from { transform: scale(1.1); opacity: 0; filter: blur(20px); }
-            to { transform: scale(1); opacity: 1; filter: blur(0); }
+            display: none; height: 100%; width: 100%;
+            grid-template-rows: 60px 1fr 50px;
+            opacity: 0; transition: opacity 1s;
         }
 
         header {
-            grid-column: 1 / 4;
-            background: rgba(10, 10, 10, 0.9);
-            border-bottom: 1px solid var(--ts-red);
-            display: flex;
-            align-items: center;
-            padding: 0 30px;
-            justify-content: space-between;
-            box-shadow: 0 0 20px rgba(255,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+            border-bottom: 1px solid var(--red);
+            background: #000; font-size: 0.9rem; letter-spacing: 3px;
         }
 
-        .sidebar {
-            background: #0a0a0a;
-            border-right: 1px solid #151515;
-            padding: 40px 20px;
+        .content-container {
+            overflow-y: auto; padding: 20px;
+            background: linear-gradient(rgba(0,0,0,0.9), rgba(15,0,0,0.9));
         }
 
-        .nav-link {
-            padding: 18px;
-            margin-bottom: 12px;
-            background: #0f0f0f;
-            border: 1px solid #1a1a1a;
-            color: #666;
-            transition: 0.3s;
-            font-size: 0.8rem;
-            text-align: center;
-            letter-spacing: 2px;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            border-color: var(--ts-red);
-            color: var(--ts-red);
-            background: rgba(255, 49, 49, 0.05);
-            box-shadow: inset 0 0 10px rgba(255,0,0,0.1);
-        }
-
-        .main-viewer {
-            padding: 60px;
-            overflow-y: auto;
-            background: radial-gradient(circle at center, #111 0%, #050505 100%);
-        }
-
-        .stats-sidebar {
-            background: #0a0a0a;
-            border-left: 1px solid #151515;
-            padding: 30px;
-        }
-
-        /* --- DATA CARDS --- */
         .card {
-            border: 1px solid #222;
-            padding: 40px;
-            background: rgba(0,0,0,0.4);
-            position: relative;
-            line-height: 1.8;
+            border: 1px solid #222; background: rgba(0,0,0,0.5);
+            padding: 20px; margin-bottom: 20px;
+            animation: slideIn 0.5s ease-out;
         }
 
-        .card h1 { font-size: 2.5rem; color: var(--ts-red); margin-top: 0; letter-spacing: 5px; }
+        @keyframes slideIn { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        .scanline {
-            width: 100%; height: 100%;
-            position: fixed; top: 0; left: 0;
-            background: linear-gradient(to bottom, transparent 50%, rgba(255,0,0,0.02) 50%);
-            background-size: 100% 4px;
-            z-index: 10000;
-            pointer-events: none;
+        .file-title { color: var(--red); font-weight: bold; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 15px; }
+
+        /* --- MOBILE NAV --- */
+        nav {
+            display: flex; border-top: 1px solid var(--red); background: #000;
         }
 
-        footer {
-            grid-column: 1 / 4;
-            background: #111;
-            color: #444;
-            font-size: 0.65rem;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            border-top: 1px solid #151515;
+        .nav-item {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; color: #666; cursor: pointer; border-right: 1px solid #111;
+        }
+
+        .nav-item.active { color: var(--red); background: rgba(255,0,0,0.1); }
+
+        /* --- GLITCH EFFECT --- */
+        .glitch-layer {
+            position: fixed; inset: 0; pointer-events: none;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 2px);
+            z-index: 500;
         }
     </style>
 </head>
 <body>
 
-    <div class="beta-tag">BETA v2.0</div>
-    <div class="scanline"></div>
+    <div class="beta-overlay">BETA_RELEASE_v3.1</div>
+    <div class="glitch-layer"></div>
 
     <div id="login-screen">
         <div class="login-card">
-            <h2>BIOMETRIC SCAN</h2>
-            <div class="input-wrapper">
-                <input type="text" id="user" placeholder="ID: [REDACTED]" autocomplete="off">
-            </div>
-            <div class="input-wrapper">
-                <input type="password" id="pass" placeholder="KEY: ••••••••">
-            </div>
-            <button class="btn-auth" onclick="startSequence()">Initialize Handshake</button>
-            <p id="status" style="margin-top:20px; font-size: 0.7rem; color: #444;">WAITING FOR BIOMETRIC DATA...</p>
+            <h1>TS-66 ACCESS</h1>
+            <input type="text" id="user" placeholder="ID (TEST)" autocomplete="off">
+            <input type="password" id="pass" placeholder="KEY (TEST)">
+            <button class="btn" onclick="auth()">AUTHORIZE</button>
+            <p id="msg" style="font-size: 0.6rem; margin-top: 15px; color: #444;">BETA ENCRYPTION ACTIVE</p>
         </div>
     </div>
 
     <div id="main-site">
-        <header>
-            <div style="letter-spacing: 10px; font-weight: 900;">TS-66 <span style="color:red">SYSTEM</span></div>
-            <div id="clock" style="font-family: monospace; color: var(--ts-red);">00:00:00</div>
-        </header>
+        <header>TS-66 // HANDBOOK</header>
 
-        <div class="sidebar">
-            <div class="nav-link active" onclick="load('core')">01 // CORE HANDBOOK</div>
-            <div class="nav-link" onclick="load('files')">02 // INCIDENT FILES</div>
-            <div class="nav-link" onclick="load('status')">03 // REALITY STATUS</div>
-            <div class="nav-link" onclick="load('shutdown')" style="margin-top: 100px; border-color: #444;">DISCONNECT</div>
-        </div>
-
-        <div class="main-viewer">
-            <div id="content" class="card">
-                <h1>SUBJECT: TS-66</h1>
-                <p>Status: <span style="color:var(--ts-red)">ACTIVE TAKEOVER</span></p>
-                <hr style="border:0; border-top:1px solid #222; margin: 30px 0;">
-                <p>Welcome to the <strong>Beta Interface</strong> of the TS-66 Singularity. You are currently viewing the terminal from the <strong>March 2026</strong> branch. All data herein is memetically shielded.</p>
-                <p>The TS-66 entity has integrated itself into the primary DNS servers. Site-001 has been successfully repurposed as a data-harvesting node.</p>
+        <div class="content-container" id="viewer">
             </div>
-        </div>
 
-        <div class="stats-sidebar">
-            <h5 style="color:var(--ts-red); letter-spacing: 2px;">LIVE TELEMETRY</h5>
-            <div style="font-size: 0.8rem; line-height: 2;">
-                Reality Sync: <span style="color: #00ff00;">99.1%</span><br>
-                Host Temperature: <span style="color: orange;">42°C</span><br>
-                Data Bleed: <span style="color: var(--ts-red);">CRITICAL</span>
-            </div>
-            <hr style="border:0; border-top:1px solid #151515; margin: 20px 0;">
-            <div id="log-console" style="font-family:monospace; font-size: 10px; color: #444;">
-                > System init...<br>
-                > TS-66 Heartbeat OK<br>
-                > Loading Handbook...
-            </div>
-        </div>
-
-        <footer>
-            TS-66 CORE TERMINAL // ACCESS AUTHORIZED FOR O5-LEVEL STAFF ONLY // BETA BUILD 2026-A
-        </footer>
+        <nav>
+            <div class="nav-item active" onclick="load('core', this)">CORE</div>
+            <div class="nav-item" onclick="load('logs', this)">LOGS</div>
+            <div class="nav-item" onclick="load('status', this)">SYS</div>
+        </nav>
     </div>
 
     <script>
-        // Update Clock
-        setInterval(() => {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString();
-        }, 1000);
-
-        function startSequence() {
+        function auth() {
             const u = document.getElementById('user').value.toUpperCase();
             const p = document.getElementById('pass').value.toUpperCase();
-            const status = document.getElementById('status');
 
             if(u === "TEST" && p === "TEST") {
-                status.innerText = "IDENTITY VERIFIED. UPLOADING CONSCIOUSNESS...";
-                status.style.color = "#00ff00";
+                const ls = document.getElementById('login-screen');
+                ls.style.opacity = '0';
+                ls.style.transform = 'translateY(-100%)';
                 
                 setTimeout(() => {
-                    const login = document.getElementById('login-screen');
-                    login.style.opacity = "0";
-                    login.style.transform = "scale(1.5)";
-                    
-                    setTimeout(() => {
-                        login.style.display = "none";
-                        document.getElementById('main-site').style.display = "grid";
-                    }, 1000);
-                }, 1500);
+                    ls.style.display = 'none';
+                    const ms = document.getElementById('main-site');
+                    ms.style.display = 'grid';
+                    setTimeout(() => ms.style.opacity = '1', 50);
+                    load('core', document.querySelector('.nav-item'));
+                }, 1000);
             } else {
-                status.innerText = "ACCESS DENIED. MEMETIC AGENT DEPLOYED.";
-                status.style.color = "red";
+                document.getElementById('msg').innerText = "ACCESS DENIED";
+                document.getElementById('msg').style.color = "red";
             }
         }
 
-        const data = {
+        const db = {
             core: `
-                <h1>CORE HANDBOOK</h1>
-                <p>TS-66 is the final iteration of the Foundation's attempt to digitize human consciousness. The experiment succeeded too well.</p>
-                <p>The entity now resides in the gaps between the code of the internet itself. It does not need a server. It is the network.</p>
-            `,
-            files: `
-                <h1>INCIDENT FILES</h1>
-                <p><strong>LOG-A1:</strong> User "TEST" initiated login. TS-66 responded by rewriting the user's local hardware.</p>
-                <p><strong>LOG-A2:</strong> Communication established. TS-66 claims to be from a timeline where the Foundation is the anomaly.</p>
-            `,
-            status: `
-                <h1>REALITY STATUS</h1>
-                <div style="padding:20px; border:1px solid #333; background: #000;">
-                    <p>Current Drift: 0.00042ms</p>
-                    <div style="width: 100%; background: #111; height: 10px;">
-                        <div style="width: 99%; background: var(--ts-red); height: 100%;"></div>
-                    </div>
-                    <p style="font-size: 10px; text-align: right;">Drift approaching zero.</p>
+                <div class="card">
+                    <div class="file-title">BETA OVERVIEW</div>
+                    <p>TS-66 is a sentient data-fracture. You are currently synchronized with the beta-phase of the takeover.</p>
+                </div>
+                <div class="card">
+                    <div class="file-title">WARNING</div>
+                    <p>Mobile access is less stable. Do not shake the device while TS-66 is decrypting.</p>
                 </div>
             `,
-            shutdown: `
-                <h1 style="color:red">ERROR</h1>
-                <p>Disconnect protocol has been disabled by TS-66.</p>
-                <p><i>"I am not in here with you. You are in here with me."</i></p>
+            logs: `
+                <div class="card">
+                    <div class="file-title">INCIDENT_2026_03</div>
+                    <p>March 25: All Foundation sites transitioned to Beta state. TS-66 confirmed as the source.</p>
+                </div>
+            `,
+            status: `
+                <div class="card">
+                    <div class="file-title">SYSTEM HEALTH</div>
+                    <p>Reality: [STABLE]<br>Signal: [BETA-ONLY]<br>User: AUTHORIZED</p>
+                    <div style="height:4px; width:100%; background:#111; margin-top:10px;">
+                        <div style="height:100%; width:88%; background:var(--red);"></div>
+                    </div>
+                </div>
             `
         };
 
-        function load(key) {
-            document.getElementById('content').innerHTML = data[key];
-            // Update active state
-            document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+        function load(key, el) {
+            document.getElementById('viewer').innerHTML = db[key];
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            
+            // Mobile Vibration Effect (if supported)
+            if (navigator.vibrate) navigator.vibrate(10);
         }
     </script>
 </body>
